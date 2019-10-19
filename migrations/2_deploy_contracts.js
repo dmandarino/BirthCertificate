@@ -1,5 +1,5 @@
-var BirthCertificate = artifacts.require("./BirthCertificate.sol");
+var Notary = artifacts.require("./Notary.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(BirthCertificate);
+  deployer.deploy(Notary);
 };
