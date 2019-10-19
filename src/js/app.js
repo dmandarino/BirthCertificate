@@ -21,11 +21,11 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON("BirthCertificate.json", function(birthCertificate) {
+    $.getJSON("Election.json", function(election) {
       // Instantiate a new truffle contract from the artifact
-      App.contracts.BirthCertificate = TruffleContract(birthCertificate);
+      App.contracts.Election = TruffleContract(election);
       // Connect provider to interact with contract
-      App.contracts.BirthCertificate.setProvider(App.web3Provider);
+      App.contracts.Election.setProvider(App.web3Provider);
 
       return App.render();
     });
@@ -48,7 +48,7 @@ App = {
     });
   
     // Load contract data
-    App.contracts.BirthCertificate.deployed().then(function(instance) {
+    App.contracts.Election.deployed().then(function(instance) {
       electionInstance = instance;
       return electionInstance.candidatesCount();
     }).then(function(candidatesCount) {
@@ -87,10 +87,8 @@ App = {
   },
 
   castVote: function() {
-    console.log("Entrei");
     var candidateId = $('#candidatesSelect').val();
-    console.log(candidateId);
-    App.contracts.BirthCertificate.deployed().then(function(instance) {
+    App.contracts.Election.deployed().then(function(instance) {
       return instance.vote(candidateId, { from: App.account });
     }).then(function(result) {
       // Wait for votes to update
@@ -98,6 +96,32 @@ App = {
       $("#loader").show();
     }).catch(function(err) {
       console.error(err);
+    });
+  },
+  
+  listenForEvents: function() {
+    App.contracts.Election.deployed().then(function(instance) {
+      instance.votedEvent({}, {
+        fromBlock: 0,
+        toBlock: 'latest'
+      }).watch(function(error, event) {
+        console.log("event triggered", event)
+        // Reload when a new vote is recorded
+        App.render();
+      });
+    });
+  },
+
+  initContract: function() {
+    $.getJSON("Election.json", function(election) {
+      // Instantiate a new truffle contract from the artifact
+      App.contracts.Election = TruffleContract(election);
+      // Connect provider to interact with contract
+      App.contracts.Election.setProvider(App.web3Provider);
+  
+      App.listenForEvents();
+  
+      return App.render();
     });
   }
 };
