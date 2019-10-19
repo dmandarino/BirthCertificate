@@ -1,41 +1,14 @@
 pragma solidity 0.5.8;
 pragma experimental ABIEncoderV2;
 import './BirthCertificate.sol';
-// import { certificate} from './BirthCertificate.sol';
 
-contract Notary {
+contract Notary is BirthCertificate {
 
-     // Model a Certificate
-    struct Certificate {
-        uint id;
-        uint registration;
-        Child child;
-        GrandParents grandParents;
-    }
-
-    struct Child {
-        string name;
-        string city;
-        string gender;
-        string father;
-        string mother;
-    }
-
-    struct GrandParents {
-        string paternalGrandfather;
-        string paternalGrandmother;
-        string maternalGrandfather;
-        string maternalGrandmother;
-        string witness;
-    }
-    
-    // Read/write Candidates
+    // Read/write Certificates
     mapping(uint => BirthCertificate.Certificate) public certificates;
     uint public certificateCount;
-    
-    constructor() public {
-        
-    }
+
+    constructor() public {}
 
     function createCertificate ( uint _registration,
                                 string memory _name,
@@ -47,7 +20,7 @@ contract Notary {
                                 string memory _paternalGrandmother,
                                 string memory _maternalGrandfather,
                                 string memory _maternalGrandmother,
-                                string memory _witness ) private {
+                                string memory _witness ) public {
 
         certificateCount ++;
         certificates[certificateCount] = BirthCertificate.Certificate(certificateCount,
