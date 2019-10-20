@@ -4,19 +4,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Election Results</title>
+    <title>Certidão de Nascimento</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
   </head>
-  <body>
-    <div class="container" style="width: 650px;">
-      <div class="row">
-        <div class="col-lg-12">
-          <h1 class="text-center">Election Results</h1>
-          <hr/>
-          <br/>
-          <div id="loader">
+  <body style="background-color: #ccc; color: #333;">
+    <div class="container" style="width: 860px; background-color: #d8dcc3;">
+      <div class="row col-lg-12">
+        <h1 class="text-center">Certidão de Nascimento</h1>
+        <hr/>
+        <br/>
+         <!-- <div id="loader">
             <p class="text-center">Loading...</p>
           </div>
           <div id="content" style="display: none;">
@@ -45,7 +44,206 @@
         </div>
         <button type="submit" class="btn btn-primary">Vote</button>
         <hr />
+      </form> -->
+        
+      <form onSubmit="App.castVote(); return false;">
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-md-2 col-form-label">Nome</label>
+          <div class="col-md-10">
+            <input type="text" class="form-control" id="name" placeholder="Nome">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputPassword3" class="col-md-2 col-form-label">Cidade</label>
+          <div class="col-md-10">
+            <input type="text" class="form-control" id="city" placeholder="Cidade">
+          </div>
+        </div>
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-md-2" style="font-size: 14px; font-weight: bold;">Radios</legend>
+            <div class="col-md-10">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gender_M" value="M" checked>
+                <label class="form-check-label" for="gender_M">
+                  Masculino
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gender_F" value="F">
+                <label class="form-check-label" for="gender_F">
+                  Feminino
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <hr/>
+        <h4 class="text-center">Filiação</h4>
+        <br/>
+        <div class="form-group row">
+          <label for="father" class="col-md-2 col-form-label">Pai</label>
+          <div class="col-md-10">
+            <input type="text" class="form-control" id="father" value="Não Informado">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="mother" class="col-md-2 col-form-label">Mãe</label>
+          <div class="col-md-10">
+            <input type="text" class="form-control" id="mother" value="Não Informado">
+          </div>
+        </div>
+        <br/>
+        <div class="form-group row">
+            <label for="paternalGrandfather" class="col-md-1 col-form-label">Avô Paterno</label>
+            <div class="col-md-5">
+              <textarea class="form-control" id="paternalGrandfather" rows="3">
+                Não Informado
+              </textarea>
+            </div>
+            <label for="paternalGrandmother" class="col-md-1 col-form-label">Avó Paterna</label>
+            <div class="col-md-5">
+              <textarea class="form-control" id="paternalGrandmother" rows="3">
+                Não Informado
+              </textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="maternalGrandfather" class="col-md-1 col-form-label">Avô Materno</label>
+            <div class="col-md-5">
+              <textarea class="form-control" id="maternalGrandfather" rows="3">
+                Não Informado
+              </textarea>
+            </div>
+            <label for="maternalGrandmother" class="col-md-1 col-form-label">Avó Materna</label>
+            <div class="col-md-5">
+              <textarea class="form-control" id="maternalGrandmother" rows="3">
+                Não Informado
+              </textarea>
+            </div>
+        </div>
+        <hr/>
+        <h4 class="text-center">Cartório</h4>
+        <br/>
+        <div class="form-group row">
+          <label for="inputPassword3" class="col-md-2 col-form-label">Declarante</label>
+          <div class="col-md-10">
+            <input type="text" class="form-control" id="inputPassword3" placeholder="Declarante">
+          </div>
+        </div>
+        <br/>
+        <button class="btn btn-primary" type="submit">Submit form</button>
+        <br/><br/>
       </form>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <!-- <form onSubmit="App.castVote(); return false;">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="name" class="col-md-2 col-form-label">Nome</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="name" placeholder="Nome">
+              </div>
+            </div>
+          </div>  
+          <fieldset class="form-group col-md-12">
+              <legend for="name col-md-2">Sexo</legend>
+              <div class="col-md-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gridRadios" id="gender_m" value="option1" checked>
+                  <label class="form-check-label" for="gender_m">
+                    Masculino
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gridRadios" id="gender_f" value="option2">
+                  <label class="form-check-label" for="gender_f">
+                    Feminino
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+            <br/>
+            <br/>
+            <br/>
+            <hr/>
+            <h4 class="text-center">Filiação</h4>
+            <div class="form-group col-md-12">
+              <label for="father">Pai</label>
+              <input type="text" class="form-control" id="father" value="Não Informado">
+            </div>
+            <div class="form-group col-md-12">
+              <label for="mother">Mãe</label>
+              <input type="text" class="form-control" id="mother" value="Não Informado">
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="paternalGrandfather">Avô Paterno</label>
+            <textarea class="form-control" id="paternalGrandfather" rows="3">
+              Não Informado
+            </textarea>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="paternalGrandmother">Avó Paterna</label>
+            <textarea class="form-control" id="paternalGrandmother" rows="3">
+              Não Informado
+            </textarea>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="maternalGrandfather">Avô Materno</label>
+            <textarea class="form-control" id="paternalGrandfather" rows="3">
+              Não Informado
+            </textarea>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="maternalGrandmother">Avó Materna</label>
+            <textarea class="form-control" id="paternalGrandmother" rows="3">
+              Não Informado
+            </textarea>
+          </div>
+          <div class="form-group">
+            <label for="inputAddress2">Address 2</label>
+            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputCity">City</label>
+              <input type="text" class="form-control" id="inputCity">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputState">State</label>
+              <select id="inputState" class="form-control">
+                <option selected>Choose...</option>
+                <option>...</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="inputZip">Zip</label>
+              <input type="text" class="form-control" id="inputZip">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="gridCheck">
+              <label class="form-check-label" for="gridCheck">
+                Check me out
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+      </div> -->
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
