@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 contract Notary {
 
    struct BirthCertificate {
-        uint registrationNumber;
+        uint registration;
         string name;
         string city;
         string gender;
@@ -18,11 +18,11 @@ contract Notary {
     }
     // Read/write Certificates
     mapping(uint => BirthCertificate) public birthCertificates;
-    uint public birthCertificateCount;
+    uint public birthCertificateNumber;
 
     constructor() public {}
 
-    function createBirthCertificate ( uint _registrationNumber,
+    function createBirthCertificate ( uint _registration,
                                 string memory _name,
                                 string memory _city,
                                 string memory _gender,
@@ -34,9 +34,9 @@ contract Notary {
                                 string memory _maternalGrandmother,
                                 string memory _witness ) public {
 
-        birthCertificateCount ++;
+        birthCertificateNumber ++;
         BirthCertificate memory certificate;
-        certificate.registrationNumber = _registrationNumber;
+        certificate.registration = _registration;
         certificate.name = _name;
         certificate.city = _city;
         certificate.gender = _gender;
@@ -50,7 +50,7 @@ contract Notary {
 
         validateBirthCertificate(certificate);
 
-        birthCertificates[birthCertificateCount] = certificate;
+        birthCertificates[birthCertificateNumber] = certificate;
     }
 
     // function vote (uint _candidateId) public {
@@ -67,8 +67,14 @@ contract Notary {
     //     // candidates[_candidateId].voteCount ++;
     // }
 
+
+    function get() public view returns (string memory) {
+        BirthCertificate memory certificate = birthCertificates[1];
+        return certificate.name;
+    }
+
     function validateBirthCertificate(BirthCertificate memory certificate) private {
-        require(certificate.registrationNumber != 0, 'registrationNumber must not be empty');
+        require(certificate.registration != 0, 'registration must not be empty');
         require(bytes(certificate.name).length > 0, 'name must not be empty');
         require(bytes(certificate.city).length > 0, 'city must not be empty');
         bytes memory gender = bytes(certificate.gender);
@@ -81,8 +87,8 @@ contract Notary {
         require(bytes(certificate.maternalGrandmother).length > 0, 'maternalGrandmother must not be empty');
         require(bytes(certificate.witness).length > 0, 'witness must not be empty');
 
-        for ( uint i=0; i < birthCertificateCount; i++ ) {
-            require(birthCertificates[i].registrationNumber != certificate.registrationNumber, 'registrationNumber must be unique');
+        for ( uint i=0; i < birthCertificateNumber; i++ ) {
+            require(birthCertificates[i].registration != certificate.registration, 'registration must be unique');
         }
     }
 }

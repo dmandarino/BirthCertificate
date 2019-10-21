@@ -21,11 +21,20 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON("Election.json", function(election) {
+    // $.getJSON("Election.json", function(election) {
+    //   // Instantiate a new truffle contract from the artifact
+    //   App.contracts.Election = TruffleContract(election);
+    //   // Connect provider to interact with contract
+    //   App.contracts.Election.setProvider(App.web3Provider);
+
+    //   return App.render();
+    // });
+
+    $.getJSON("Notary.json", function(notary) {
       // Instantiate a new truffle contract from the artifact
-      App.contracts.Election = TruffleContract(election);
+      App.contracts.Notary = TruffleContract(notary);
       // Connect provider to interact with contract
-      App.contracts.Election.setProvider(App.web3Provider);
+      App.contracts.Notary.setProvider(App.web3Provider);
 
       return App.render();
     });
@@ -48,42 +57,42 @@ App = {
     });
   
     // Load contract data
-    App.contracts.Election.deployed().then(function(instance) {
-      electionInstance = instance;
-      return electionInstance.candidatesCount();
-    }).then(function(candidatesCount) {
-      var candidatesResults = $("#candidatesResults");
-      candidatesResults.empty();
+  //   App.contracts.Election.deployed().then(function(instance) {
+  //     electionInstance = instance;
+  //     return electionInstance.candidatesCount();
+  //   }).then(function(candidatesCount) {
+  //     var candidatesResults = $("#candidatesResults");
+  //     candidatesResults.empty();
   
-      var candidatesSelect = $('#candidatesSelect');
-      candidatesSelect.empty();
+  //     var candidatesSelect = $('#candidatesSelect');
+  //     candidatesSelect.empty();
   
-      for (var i = 1; i <= candidatesCount; i++) {
-        electionInstance.candidates(i).then(function(candidate) {
-          var id = candidate[0];
-          var name = candidate[1];
-          var voteCount = candidate[2];
+  //     for (var i = 1; i <= candidatesCount; i++) {
+  //       electionInstance.candidates(i).then(function(candidate) {
+  //         var id = candidate[0];
+  //         var name = candidate[1];
+  //         var voteCount = candidate[2];
   
-          // Render candidate Result
-          var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-          candidatesResults.append(candidateTemplate);
+  //         // Render candidate Result
+  //         var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
+  //         candidatesResults.append(candidateTemplate);
   
-          // Render candidate ballot option
-          var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-          candidatesSelect.append(candidateOption);
-        });
-      }
-      return electionInstance.voters(App.account);
-    }).then(function(hasVoted) {
-      // Do not allow a user to vote
-      if(hasVoted) {
-        $('form').hide();
-      }
-      loader.hide();
-      content.show();
-    }).catch(function(error) {
-      console.warn(error);
-    });
+  //         // Render candidate ballot option
+  //         var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
+  //         candidatesSelect.append(candidateOption);
+  //       });
+  //     }
+  //     return electionInstance.voters(App.account);
+  //   }).then(function(hasVoted) {
+  //     // Do not allow a user to vote
+  //     if(hasVoted) {
+  //       $('form').hide();
+  //     }
+  //     loader.hide();
+  //     content.show();
+  //   }).catch(function(error) {
+  //     console.warn(error);
+  //   });
   },
 
   castVote: function() {
@@ -100,7 +109,17 @@ App = {
   },
   
   listenForEvents: function() {
-    App.contracts.Election.deployed().then(function(instance) {
+    // App.contracts.Election.deployed().then(function(instance) {
+    //   instance.votedEvent({}, {
+    //     fromBlock: 0,
+    //     toBlock: 'latest'
+    //   }).watch(function(error, event) {
+    //     console.log("event triggered", event)
+    //     // Reload when a new vote is recorded
+    //     App.render();
+    //   });
+    // });
+    App.contracts.Notary.deployed().then(function(instance) {
       instance.votedEvent({}, {
         fromBlock: 0,
         toBlock: 'latest'
@@ -113,17 +132,61 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON("Election.json", function(election) {
+    // $.getJSON("Election.json", function(election) {
+    //   // Instantiate a new truffle contract from the artifact
+    //   App.contracts.Election = TruffleContract(election);
+    //   // Connect provider to interact with contract
+    //   App.contracts.Election.setProvider(App.web3Provider);
+  
+    //   App.listenForEvents();
+  
+    //   return App.render();
+    // });
+
+    $.getJSON("Notary.json", function(notary) {
       // Instantiate a new truffle contract from the artifact
-      App.contracts.Election = TruffleContract(election);
+      App.contracts.Notary = TruffleContract(notary);
       // Connect provider to interact with contract
-      App.contracts.Election.setProvider(App.web3Provider);
-  
-      App.listenForEvents();
-  
+      App.contracts.Notary.setProvider(App.web3Provider);
+
       return App.render();
     });
-  }
+  },
+
+  createBirthCertificate: function() {
+//     var name = $('#name').val();
+//     App.contracts.Notary.deployed().then(function(instance) {
+//       console.log('ENTREI')
+//       return instance.createBirthCertificate(1,
+//                                       'Golias',
+//                                       'Gotham City',
+//                                       'M',
+//                                       'Thomas Wayne',
+//                                       'Martha Wayne',
+//                                       'Grandfather Wayne',
+//                                       'Grandmother Wayne',
+//                                       'Grandfather Mother',
+//                                       'Grandmother Mother',
+//                                       'Douglas Mandarino',
+//                                       { from: App.account, gas:3000000 });
+//     }).then(function(result) {
+//       console.log('salvei')
+//       let certificate = instance.birthCertificates(cetificateNumber);
+//       console.log('Name = ' + certificate.name);
+//     }).catch(function(err) {
+//       console.error(err);
+//     });
+    App.contracts.Notary.deployed().then(function(instance) {
+        return instance.get();
+      }).then(function(name) {
+        $("#accountAddress").html("Your Account: " + name);
+
+        console.log(name)
+        // Wait for votes to update
+      }).catch(function(err) {
+        console.error(err);
+      });
+  }
 };
 
 $(function() {

@@ -3,14 +3,6 @@ var Notary = artifacts.require("./Notary.sol");
 contract("Notary", function(accounts) {
   var notaryInstance;
 
-  it("initialize Notary", function() {
-    return Notary.deployed().then(function(instance) {
-      return instance.birthCertificateCount();
-    }).then(function(count) {
-      assert.equal(count, 0);
-    });
-  });
-
   it("create a Birth Certificate", function() {
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
@@ -113,7 +105,6 @@ contract("Notary", function(accounts) {
                                           'Douglas Mandarino',
                                           { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
-      // console.log(error.message.indexOf('registration must be unique'));
       // assert(error.message.indexOf('revert') >= 0, 'registration must be unique');
     });
   });
