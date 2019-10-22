@@ -153,40 +153,41 @@ App = {
     });
   },
 
-  createBirthCertificate: function() {
-//     var name = $('#name').val();
-//     App.contracts.Notary.deployed().then(function(instance) {
-//       console.log('ENTREI')
-//       return instance.createBirthCertificate(1,
-//                                       'Golias',
-//                                       'Gotham City',
-//                                       'M',
-//                                       'Thomas Wayne',
-//                                       'Martha Wayne',
-//                                       'Grandfather Wayne',
-//                                       'Grandmother Wayne',
-//                                       'Grandfather Mother',
-//                                       'Grandmother Mother',
-//                                       'Douglas Mandarino',
-//                                       { from: App.account, gas:3000000 });
-//     }).then(function(result) {
-//       console.log('salvei')
-//       let certificate = instance.birthCertificates(cetificateNumber);
-//       console.log('Name = ' + certificate.name);
-//     }).catch(function(err) {
-//       console.error(err);
-//     });
+  createCertificate: function() {
+    var name = $('#name').val();
     App.contracts.Notary.deployed().then(function(instance) {
-        return instance.get();
-      }).then(function(name) {
-        $("#accountAddress").html("Your Account: " + name);
+      console.log('ENTREI')
+      return instance.createCertificate(1,
+                                      'Golias',
+                                      'Gotham City',
+                                      'M',
+                                      'Thomas Wayne',
+                                      'Martha Wayne',
+                                      'Grandfather Wayne',
+                                      'Grandmother Wayne',
+                                      'Grandfather Mother',
+                                      'Grandmother Mother',
+                                      'Douglas Mandarino',
+                                      { from: App.account, gas:3000000 });
+    }).then(function(result) {
+      console.log('salvei')
+      let certificate = instance.certificates(cetificateNumber);
+      console.log('Name = ' + certificate.name);
+    }).catch(function(err) {
+      console.error(err);
+    });
+  },
 
-        console.log(name)
-        // Wait for votes to update
-      }).catch(function(err) {
-        console.error(err);
-      });
-  }
+  searchCertificate: function() {
+    const search = $('#search').val();
+    App.contracts.Notary.deployed().then(function(instance) {
+      return instance.getByID(99).then(function(name) {
+        $("#accountAddress").html("Your Account: " + name);
+      });
+    }).catch(function(err) {
+      console.error(err);
+    });
+  }
 };
 
 $(function() {

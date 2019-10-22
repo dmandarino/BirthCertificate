@@ -6,21 +6,21 @@ contract("Notary", function(accounts) {
   it("create a Birth Certificate", function() {
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
-      notaryInstance.createBirthCertificate(99,
-                                          'Bruce Wayne',
-                                          'Gotham City',
-                                          'M',
-                                          'Thomas Wayne',
-                                          'Martha Wayne',
-                                          'Grandfather Wayne',
-                                          'Grandmother Wayne',
-                                          'Grandfather Mother',
-                                          'Grandmother Mother',
-                                          'Douglas Mandarino',
-                                          { from: accounts[1] });
-      return notaryInstance.birthCertificates(1);
+      notaryInstance.createCertificate(99,
+                                      'Bruce Wayne',
+                                      'Gotham City',
+                                      'M',
+                                      'Thomas Wayne',
+                                      'Martha Wayne',
+                                      'Grandfather Wayne',
+                                      'Grandmother Wayne',
+                                      'Grandfather Mother',
+                                      'Grandmother Mother',
+                                      'Douglas Mandarino',
+                                      { from: accounts[1] });
+      return notaryInstance.certificates(99);
     }).then(function(certificate) {
-      assert.equal(certificate.registration, 99, "Create a Crtificate");
+      assert.equal(certificate.code, 99, "Create a Crtificate");
       assert.equal(certificate.name, 'Bruce Wayne', "Create a Crtificate");
       assert.equal(certificate.city, 'Gotham City', "Create a Crtificate");
       assert.equal(certificate.gender, 'M', "Create a Crtificate");
@@ -37,7 +37,7 @@ contract("Notary", function(accounts) {
   it("throws an exception for empty field", function() {
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
-      return notaryInstance.createBirthCertificate(99,
+      return notaryInstance.createCertificate(99,
                                             '',
                                             'Gotham City',
                                             'M',
@@ -57,7 +57,7 @@ contract("Notary", function(accounts) {
   it("throws an exception for invalid gender", function() {
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
-      return notaryInstance.createBirthCertificate(99,
+      return notaryInstance.createCertificate(99,
                                             'Bruce Wayne',
                                             'Gotham City',
                                             'T',
@@ -74,10 +74,58 @@ contract("Notary", function(accounts) {
     });
   });
 
+  it("search for certificate", function() {
+    return Notary.deployed().then(function(instance) {
+      notaryInstance = instance;
+      notaryInstance.createCertificate(12,
+                                      'Damian Wayne',
+                                      'Gotham City',
+                                      'M',
+                                      'Thomas Wayne',
+                                      'Martha Wayne',
+                                      'Grandfather Wayne',
+                                      'Grandmother Wayne',
+                                      'Grandfather Mother',
+                                      'Grandmother Mother',
+                                      'Douglas Mandarino',
+                                      { from: accounts[1] });
+      return notaryInstance;
+    }).then(function(instance) {
+      return instance.certificates(12);
+    }).then(function(certificate) {
+      assert.equal(certificate[0], 12, "Search for a certificate");
+      assert.equal(certificate[1], 'Damian Wayne', "Search for a certificate");
+    });
+  });
+
+  it("search for wrong certificate", function() {
+    return Notary.deployed().then(function(instance) {
+      notaryInstance = instance;
+      notaryInstance.createCertificate(12,
+                                      'Damian Wayne',
+                                      'Gotham City',
+                                      'M',
+                                      'Thomas Wayne',
+                                      'Martha Wayne',
+                                      'Grandfather Wayne',
+                                      'Grandmother Wayne',
+                                      'Grandfather Mother',
+                                      'Grandmother Mother',
+                                      'Douglas Mandarino',
+                                      { from: accounts[1] });
+      return notaryInstance;
+    }).then(function(instance) {
+      return instance.certificates(10);
+    }).then(function(certificate) {
+      assert.notEqual(certificate[0], 10, "Search for a certificate fail");
+      assert.notEqual(certificate[1], 'Damian Wayne', "Search for a certificate fail");
+    });
+  });
+
   it("throws an exception for duplicated certification number", function() {
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
-      notaryInstance.createBirthCertificate(99,
+      notaryInstance.createCertificate(99,
                                           'Bruce Wayne',
                                           'Gotham City',
                                           'M',
@@ -89,10 +137,10 @@ contract("Notary", function(accounts) {
                                           'Grandmother Mother',
                                           'Douglas Mandarino',
                                           { from: accounts[1] });
-      return notaryInstance.birthCertificates(1);
+      return notaryInstance.certificates(1);
     }).then(function(certificate) {
-        assert.equal(certificate.registration, 99, "Create a Crtificate");
-        notaryInstance.createBirthCertificate(99,
+        assert.equal(certificate.code, 99, "Create a Crtificate");
+        notaryInstance.createCertificate(99,
                                           'Peter Parker',
                                           'New York',
                                           'M',
@@ -105,7 +153,7 @@ contract("Notary", function(accounts) {
                                           'Douglas Mandarino',
                                           { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
-      // assert(error.message.indexOf('revert') >= 0, 'registration must be unique');
+      // assert(error.message.indexOf('revert') >= 0, 'code must be unique');
     });
   });
 });

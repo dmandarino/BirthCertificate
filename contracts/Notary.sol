@@ -3,8 +3,12 @@ pragma experimental ABIEncoderV2;
 
 contract Notary {
 
-   struct BirthCertificate {
-        uint registration;
+    event createdEvent (
+        uint indexed _code
+    );
+
+   struct Certificate {
+        uint code;
         string name;
         string city;
         string gender;
@@ -17,12 +21,12 @@ contract Notary {
         string witness;
     }
     // Read/write Certificates
-    mapping(uint => BirthCertificate) public birthCertificates;
-    uint public birthCertificateNumber;
+    mapping(uint => Certificate) public certificates;
+    uint public certificateCount;
 
     constructor() public {}
 
-    function createBirthCertificate ( uint _registration,
+    function createCertificate ( uint _code,
                                 string memory _name,
                                 string memory _city,
                                 string memory _gender,
@@ -34,9 +38,9 @@ contract Notary {
                                 string memory _maternalGrandmother,
                                 string memory _witness ) public {
 
-        birthCertificateNumber ++;
-        BirthCertificate memory certificate;
-        certificate.registration = _registration;
+        certificateCount ++;
+        Certificate memory certificate;
+        certificate.code = _code;
         certificate.name = _name;
         certificate.city = _city;
         certificate.gender = _gender;
@@ -48,33 +52,15 @@ contract Notary {
         certificate.maternalGrandmother = _maternalGrandmother;
         certificate.witness = _witness;
 
-        validateBirthCertificate(certificate);
+        validateCertificate(certificate);
 
-        birthCertificates[birthCertificateNumber] = certificate;
+        certificates[_code] = certificate;
+        
+        emit createdEvent(_code);
     }
 
-    // function vote (uint _candidateId) public {
-    //     // // require that they haven't voted before
-    //     // require(!voters[msg.sender]);
-
-    //     // // require a valid candidate
-    //     // require(_candidateId > 0 && _candidateId <= certificateCount);
-
-    //     // // record that voter has voted
-    //     // voters[msg.sender] = true;
-
-    //     // // update candidate vote Count
-    //     // candidates[_candidateId].voteCount ++;
-    // }
-
-
-    function get() public view returns (string memory) {
-        BirthCertificate memory certificate = birthCertificates[1];
-        return certificate.name;
-    }
-
-    function validateBirthCertificate(BirthCertificate memory certificate) private {
-        require(certificate.registration != 0, 'registration must not be empty');
+    function validateCertificate(Certificate memory certificate) private {
+        require(certificate.code != 0, 'code must not be empty');
         require(bytes(certificate.name).length > 0, 'name must not be empty');
         require(bytes(certificate.city).length > 0, 'city must not be empty');
         bytes memory gender = bytes(certificate.gender);
@@ -87,8 +73,8 @@ contract Notary {
         require(bytes(certificate.maternalGrandmother).length > 0, 'maternalGrandmother must not be empty');
         require(bytes(certificate.witness).length > 0, 'witness must not be empty');
 
-        for ( uint i=0; i < birthCertificateNumber; i++ ) {
-            require(birthCertificates[i].registration != certificate.registration, 'registration must be unique');
+        for ( uint i = 0; i < certificateCount; i++ ) {
+            require(certificates[i].code != certificate.code, 'code must be unique');
         }
     }
 }
