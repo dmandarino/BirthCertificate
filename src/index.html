@@ -10,14 +10,15 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body style="background-color: #ccc; color: #333;">
-    <nav class="navbar navbar-default static-top">
+    <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
         <a class="navbar-brand" href="#">Criar</a>
-        <a class="navbar-brand" href="list.html">Lista</a>
-        <form class="navbar-form navbar-right" onSubmit="App.listCertificates(); return false;">
+        <!-- <a class="navbar-brand" href="list.html">Lista</a> -->
+        </div>
+        <form class="navbar-form navbar-right " onSubmit="App.searchCertificate(); return false;">
           <div class="form-group">
-            <input type="text" class="form-control" id="search" placeholder="Buscar">
+            <input type="text" class="form-control" id="searchID" placeholder="Buscar">
           </div>
           <button type="submit" class="btn btn-default">Buscar</button>
         </form>
@@ -108,9 +109,9 @@
           <h4 class="text-center">Cartório</h4>
           <br/>
           <div class="form-group row">
-            <label for="inputPassword3" class="col-md-2 col-form-label">Declarante</label>
+            <label for="witness" class="col-md-2 col-form-label">Declarante</label>
             <div class="col-md-10">
-              <input type="text" class="form-control" id="inputPassword3" placeholder="Declarante">
+              <input type="text" class="form-control" id="witness" placeholder="Declarante">
             </div>
           </div>
           <p id="accountAddress" class="text-center"></p>

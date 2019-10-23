@@ -18,7 +18,7 @@ contract("Notary", function(accounts) {
                                       'Grandmother Mother',
                                       'Douglas Mandarino',
                                       { from: accounts[1] });
-      return notaryInstance.certificates(99);
+      return notaryInstance.certificates(1);
     }).then(function(certificate) {
       assert.equal(certificate.code, 99, "Create a Crtificate");
       assert.equal(certificate.name, 'Bruce Wayne', "Create a Crtificate");
@@ -91,10 +91,12 @@ contract("Notary", function(accounts) {
                                       { from: accounts[1] });
       return notaryInstance;
     }).then(function(instance) {
-      return instance.certificates(12);
-    }).then(function(certificate) {
-      assert.equal(certificate[0], 12, "Search for a certificate");
-      assert.equal(certificate[1], 'Damian Wayne', "Search for a certificate");
+      instance.getCertificateKey(12).then(function(codeKey) {
+        return instance.certificates(codeKey);
+      }).then(function(certificate) {
+        assert.equal(certificate[0], 12, "Search for a certificate");
+        assert.equal(certificate[1], 'Damian Wayne', "Search for a certificate");
+      });
     });
   });
 

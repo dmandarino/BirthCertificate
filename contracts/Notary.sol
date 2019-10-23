@@ -20,8 +20,10 @@ contract Notary {
         string maternalGrandmother;
         string witness;
     }
+    
     // Read/write Certificates
     mapping(uint => Certificate) public certificates;
+    mapping(uint => uint) public codePosition;
     uint public certificateCount;
 
     constructor() public {}
@@ -37,7 +39,6 @@ contract Notary {
                                 string memory _maternalGrandfather,
                                 string memory _maternalGrandmother,
                                 string memory _witness ) public {
-
         certificateCount ++;
         Certificate memory certificate;
         certificate.code = _code;
@@ -54,13 +55,19 @@ contract Notary {
 
         validateCertificate(certificate);
 
-        certificates[_code] = certificate;
-        
+        certificates[certificateCount] = certificate;
+        codePosition[_code] = certificateCount;
+
         emit createdEvent(_code);
     }
 
+    function getCertificateKey(uint _code) public view returns(uint) {
+        uint position = codePosition[_code];
+        return position;
+    }
+
     function validateCertificate(Certificate memory certificate) private {
-        require(certificate.code != 0, 'code must not be empty');
+        require(certificates[certificate.code].code == 0, 'code must be unique');
         require(bytes(certificate.name).length > 0, 'name must not be empty');
         require(bytes(certificate.city).length > 0, 'city must not be empty');
         bytes memory gender = bytes(certificate.gender);
@@ -72,9 +79,5 @@ contract Notary {
         require(bytes(certificate.maternalGrandfather).length > 0, 'maternalGrandfather must not be empty');
         require(bytes(certificate.maternalGrandmother).length > 0, 'maternalGrandmother must not be empty');
         require(bytes(certificate.witness).length > 0, 'witness must not be empty');
-
-        for ( uint i = 0; i < certificateCount; i++ ) {
-            require(certificates[i].code != certificate.code, 'code must be unique');
-        }
     }
 }

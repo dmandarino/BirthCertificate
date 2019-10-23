@@ -154,75 +154,71 @@ App = {
   },
 
   createCertificate: function() {
-    var name = $('#name').val();
+    const name = $('#name').val();
+    const city = $('#city').val();
+    const father = $('#father').val();
+    const mother = $('#mother').val();
+    const paternalGrandfather = $('#paternalGrandfather').val();
+    const paternalGrandmother = $('#paternalGrandmother').val();
+    const maternalGrandfather = $('#maternalGrandfather').val();
+    const maternalGrandmother = $('#maternalGrandmother').val();
+    const witness = $('#witness').val();
+    // const name = $('#name').val();
+//     App.contracts.Notary.deployed().then(function(instance) {
+//         return instance.createCertificate(2,
+//                                          name,
+//                                          city,
+//                                          'M',
+//                                          father,
+//                                          mother,
+//                                          paternalGrandfather,
+//                                          paternalGrandmother,
+//                                          maternalGrandfather,
+//                                          maternalGrandmother,
+//                                          witness,
+//                                          { from: App.account, gas:3000000 });
+//       }).then(function() {
+//         console.log('salvei')
+//       }).catch(function(err) {
+//         console.error(err);
+//       });
+      
     App.contracts.Notary.deployed().then(function(instance) {
-      console.log('ENTREI')
       return instance.createCertificate(1,
-                                      'Golias',
-                                      'Gotham City',
-                                      'M',
-                                      'Thomas Wayne',
-                                      'Martha Wayne',
-                                      'Grandfather Wayne',
-                                      'Grandmother Wayne',
-                                      'Grandfather Mother',
-                                      'Grandmother Mother',
-                                      'Douglas Mandarino',
-                                      { from: App.account, gas:3000000 });
-    }).then(function(result) {
+                                       name,
+                                       city,
+                                       'M',
+                                       father,
+                                       mother,
+                                       paternalGrandfather,
+                                       paternalGrandmother,
+                                       maternalGrandfather,
+                                       maternalGrandmother,
+                                       witness,
+                                       { from: App.account, gas:3000000 });
+    }).then(function() {
       console.log('salvei')
-      let certificate = instance.certificates(cetificateNumber);
-      console.log('Name = ' + certificate.name);
-    }).catch(function(err) {
+    }).catch(function(err) {
       console.error(err);
     });
   },
 
   searchCertificate: function() {
-    const search = $('#search').val();
-    App.contracts.Notary.deployed().then(function(instance) {
-      return instance.getByID(99).then(function(name) {
-        $("#accountAddress").html("Your Account: " + name);
+    const search = $('#searchID').val();
+    App.contracts.Notary.deployed().then(function(instance) {
+      instance.codePosition(1).then(function(codeKey) {
+        return instance.certificates(codeKey);
+      }).then(function(certificate) {
+        assert.equal(certificate[0], 12, "Search for a certificate");
+        assert.equal(certificate[1], 'Damian Wayne', "Search for a certificate");
       });
-    }).catch(function(err) {
-      console.error(err);
-    });
-  },
-
-  listCertificates: function() {
-    App.render();
-    App.contracts.Notary.deployed().then(function(instance) {
-      electionInstance = instance;
-      return electionInstance.certificateCount();
-    }).then(function(candidatesCount) {
-      var candidatesResults = $("#candidatesResults");
-      candidatesResults.empty();
-  
-      var candidatesSelect = $('#candidatesSelect');
-      candidatesSelect.empty();
-  
-      for (var i = 1; i <= candidatesCount; i++) {
-        electionInstance.certificates(i).then(function(candidate) {
-          var id = candidate[0];
-          var name = candidate[1];
-          var voteCount = candidate[2];
-  
-          console.log(id)
-          console.log(name)
-          console.log(voteCount)
-
-          // Render candidate Result
-          var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-          candidatesResults.append(candidateTemplate);
-  
-          // Render candidate ballot option
-          var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-          candidatesSelect.append(candidateOption);
-        });
-      }
-    }).catch(function(error) {
-      console.warn(error);
-    });
+    }); 
+    // App.contracts.Notary.deployed().then(function(instance) {
+    //   return instance.certificates(codeKey);
+    // }).then(function(certificate) {
+    //   assert.equal(certificate[0], 12, "Search for a certificate");
+    //   assert.equal(certificate[1], 'Damian Wayne', "Search for a certificate");
+    // });
   }
 };
 
