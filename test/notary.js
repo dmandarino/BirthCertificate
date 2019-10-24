@@ -101,9 +101,10 @@ contract("Notary", function(accounts) {
   });
 
   it("search for wrong certificate", function() {
+    var notaryInstance;
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
-      notaryInstance.createCertificate(12,
+      return notaryInstance.createCertificate(12,
                                       'Damian Wayne',
                                       'Gotham City',
                                       'M',
@@ -115,9 +116,8 @@ contract("Notary", function(accounts) {
                                       'Grandmother Mother',
                                       'Douglas Mandarino',
                                       { from: accounts[1] });
-      return notaryInstance;
-    }).then(function(instance) {
-      return instance.certificates(10);
+    }).then(function() {
+      return notaryInstance.certificates(10);
     }).then(function(certificate) {
       assert.notEqual(certificate[0], 10, "Search for a certificate fail");
       assert.notEqual(certificate[1], 'Damian Wayne', "Search for a certificate fail");
