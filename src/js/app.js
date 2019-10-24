@@ -153,21 +153,25 @@ App = {
 
   showValues: function(code, name, city, gender, father, mother, paternalGrandfather, 
                       paternalGrandmother, maternalGrandfather, maternalGrandmother, witness) {
-    $('input[type="text"], textarea').attr('readonly','readonly');
-    $('#searchID').prop('readonly', false);
-    $(':radio,:checkbox').click(function(){
-      return false;
-    });
-    $("#certificateCode").html("Matrícula: " + code);
-    $("#name").val(name);
-    $("#city").val(city);
-    $("#father").val(father);
-    $("#mother").val(mother);
-    $("#paternalGrandfather").val(paternalGrandfather);
-    $("#paternalGrandmother").val(paternalGrandmother);
-    $("#maternalGrandfather").val(maternalGrandfather);
-    $("#maternalGrandmother").val(maternalGrandmother);
-    $("#witness").val(witness);
+    if (code == 0) {
+      $("#certificateCode").html("Nenhuma Certidão encontrada para matrícula: " + code);
+    } else {
+      $('input[type="text"], textarea').attr('readonly','readonly');
+      $('#searchID').prop('readonly', false);
+      $(':radio,:checkbox').click(function(){
+        return false;
+      });
+      $("#certificateCode").html("Matrícula: " + code);
+      $("#name").val(name);
+      $("#city").val(city);
+      $("#father").val(father);
+      $("#mother").val(mother);
+      $("#paternalGrandfather").val(paternalGrandfather);
+      $("#paternalGrandmother").val(paternalGrandmother);
+      $("#maternalGrandfather").val(maternalGrandfather);
+      $("#maternalGrandmother").val(maternalGrandmother);
+      $("#witness").val(witness);
+    }
   }
 };
 
