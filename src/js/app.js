@@ -95,7 +95,9 @@ App = {
     const maternalGrandfather = $('#maternalGrandfather').val();
     const maternalGrandmother = $('#maternalGrandmother').val();
     const witness = $('#witness').val();
-    // const name = $('#name').val();
+    const gender = $('input[name="gender"]:checked').val();
+
+    alert(gender)
 
     var notaryInstance;
     var newCertificateCode;
@@ -110,11 +112,12 @@ App = {
       const lastCode = certificate[0].toString();
       return parseInt(lastCode) + 1;
     }).then(function(newCode) {
+      console.log(newCode)
       newCertificateCode = newCode;
       return notaryInstance.createCertificate(newCode,
                                        name,
                                        city,
-                                       'M',
+                                       gender,
                                        father,
                                        mother,
                                        paternalGrandfather,
@@ -158,7 +161,7 @@ App = {
     } else {
       $('input[type="text"], textarea').attr('readonly','readonly');
       $('#searchID').prop('readonly', false);
-      $(':radio,:checkbox').click(function(){
+      $(':radio,:checkbox').click(function() {
         return false;
       });
       $("#certificateCode").html("Matrícula: " + code);
@@ -171,6 +174,12 @@ App = {
       $("#maternalGrandfather").val(maternalGrandfather);
       $("#maternalGrandmother").val(maternalGrandmother);
       $("#witness").val(witness);
+      var $radios = $('input:radio[name=gender]');
+      if (gender === 'M') {
+        $radios.filter('[value=M]').prop('checked', true);
+      } else {
+        $radios.filter('[value=F]').prop('checked', true);
+      }
     }
   }
 };
