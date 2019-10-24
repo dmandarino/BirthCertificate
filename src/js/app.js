@@ -52,47 +52,9 @@ App = {
     web3.eth.getCoinbase(function(err, account) {
       if (err === null) {
         App.account = account;
-        $("#accountAddress").html("Your Account: " + account);
+        $("#accountAddress").html("Endereço do Cartório: " + account);
       }
     });
-  
-    // Load contract data
-  //   App.contracts.Election.deployed().then(function(instance) {
-  //     electionInstance = instance;
-  //     return electionInstance.candidatesCount();
-  //   }).then(function(candidatesCount) {
-  //     var candidatesResults = $("#candidatesResults");
-  //     candidatesResults.empty();
-  
-  //     var candidatesSelect = $('#candidatesSelect');
-  //     candidatesSelect.empty();
-  
-  //     for (var i = 1; i <= candidatesCount; i++) {
-  //       electionInstance.candidates(i).then(function(candidate) {
-  //         var id = candidate[0];
-  //         var name = candidate[1];
-  //         var voteCount = candidate[2];
-  
-  //         // Render candidate Result
-  //         var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-  //         candidatesResults.append(candidateTemplate);
-  
-  //         // Render candidate ballot option
-  //         var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-  //         candidatesSelect.append(candidateOption);
-  //       });
-  //     }
-  //     return electionInstance.voters(App.account);
-  //   }).then(function(hasVoted) {
-  //     // Do not allow a user to vote
-  //     if(hasVoted) {
-  //       $('form').hide();
-  //     }
-  //     loader.hide();
-  //     content.show();
-  //   }).catch(function(error) {
-  //     console.warn(error);
-  //   });
   },
 
   castVote: function() {
@@ -109,16 +71,6 @@ App = {
   },
   
   listenForEvents: function() {
-    // App.contracts.Election.deployed().then(function(instance) {
-    //   instance.votedEvent({}, {
-    //     fromBlock: 0,
-    //     toBlock: 'latest'
-    //   }).watch(function(error, event) {
-    //     console.log("event triggered", event)
-    //     // Reload when a new vote is recorded
-    //     App.render();
-    //   });
-    // });
     App.contracts.Notary.deployed().then(function(instance) {
       instance.votedEvent({}, {
         fromBlock: 0,
@@ -132,17 +84,6 @@ App = {
   },
 
   initContract: function() {
-    // $.getJSON("Election.json", function(election) {
-    //   // Instantiate a new truffle contract from the artifact
-    //   App.contracts.Election = TruffleContract(election);
-    //   // Connect provider to interact with contract
-    //   App.contracts.Election.setProvider(App.web3Provider);
-  
-    //   App.listenForEvents();
-  
-    //   return App.render();
-    // });
-
     $.getJSON("Notary.json", function(notary) {
       // Instantiate a new truffle contract from the artifact
       App.contracts.Notary = TruffleContract(notary);
@@ -166,6 +107,7 @@ App = {
     // const name = $('#name').val();
 
     var notaryInstance;
+    var newCertificateCode;
 
     App.contracts.Notary.deployed().then(function(instance) {
       notaryInstance = instance;
@@ -177,7 +119,7 @@ App = {
       const lastCode = certificate[0].toString();
       return parseInt(lastCode) + 1;
     }).then(function(newCode) {
-      console.log('newCode ' + newCode)
+      newCertificateCode = newCode;
       return notaryInstance.createCertificate(newCode,
                                        name,
                                        city,
@@ -191,7 +133,8 @@ App = {
                                        witness,
                                        { from: App.account, gas:3000000 });
     }).then(function() {
-      console.log('salvei')
+      console.log('saved')
+      $("#certificateCode").html("Matrícula: " + newCertificateCode);
     }).catch(function(err) {
       console.error(err);
     });
@@ -199,33 +142,41 @@ App = {
 
   searchCertificate: function() {
     const search = $('#searchID').val();
+    
+    var notaryInstance;
     var codePosition;
+    
     return App.contracts.Notary.deployed().then(function(instance) {
-      return instance.codePosition(search, { from: App.account, gas:3000000 });
+      notaryInstance = instance;
+      return notaryInstance.getCertificateKey(search);
     }).then(function(codeKey) {
       codePosition = codeKey.toString();
-      App.contracts.Notary.deployed().then(function(instance) {
-        return instance.certificates(codePosition, { from: App.account, gas:3000000 });
-      }).then(function(certificate) {
-        console.log('NOME: ' + certificate[1])
-      }).catch(function(err) {
-        console.error(err);
-      });
+      return notaryInstance.certificates(codePosition);
+    }).then(function(certificate) {
+      App.showValues(certificate[0], certificate[1], certificate[2], certificate[3], certificate[4], certificate[5], 
+                    certificate[6], certificate[7], certificate[8], certificate[9], certificate[10]);
+    }).catch(function(err) {
+      console.error(err);
     });
   },
 
-  getLastCode: function() {
-    var codePosition;
-    var notaryInstance;
-    App.contracts.Notary.deployed().then(function(instance) {
-      notaryInstance = instance;
-      return notaryInstance.certificateCount();
-    }).then(function(count) {
-      codePosition = count.toString();
-      return notaryInstance.certificates(codePosition);
-    }).then(function(certificate) {
-      return certificate[0].toString();
+  showValues: function(code, name, city, gender, father, mother, paternalGrandfather, 
+                      paternalGrandmother, maternalGrandfather, maternalGrandmother, witness) {
+    $('input[type="text"], textarea').attr('readonly','readonly');
+    $('#searchID').prop('readonly', false);
+    $(':radio,:checkbox').click(function(){
+      return false;
     });
+    $("#certificateCode").html("Matrícula: " + code);
+    $("#name").val(name);
+    $("#city").val(city);
+    $("#father").val(father);
+    $("#mother").val(mother);
+    $("#paternalGrandfather").val(paternalGrandfather);
+    $("#paternalGrandmother").val(paternalGrandmother);
+    $("#maternalGrandfather").val(maternalGrandfather);
+    $("#maternalGrandmother").val(maternalGrandmother);
+    $("#witness").val(witness);
   }
 };
 

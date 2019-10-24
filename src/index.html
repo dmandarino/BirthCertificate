@@ -13,7 +13,7 @@
     <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
-        <a class="navbar-brand" href="#">Criar</a>
+        <a class="navbar-brand" href="#" onClick="javascript:window.location.reload();">Criar</a>
         <!-- <a class="navbar-brand" href="list.html">Lista</a> -->
         </div>
         <form class="navbar-form navbar-right " onSubmit="App.searchCertificate(); return false;">
@@ -27,9 +27,10 @@
     <div class="container" style="width: 860px; background-color: #d8dcc3;">
       <div class="row col-lg-12">
         <h1 class="text-center">Certidão de Nascimento</h1>
+        <p id="certificateCode" style="font-weight: bold; font-size: 16px;" class="text-center"></p>
         <hr/>
         <br/>        
-        <form onSubmit="App.createCertificate(); return false;">
+        <form id="#certificateForm" onSubmit="App.createCertificate(); return false;">
           <div class="form-group row">
             <label for="inputEmail3" class="col-md-2 col-form-label">Nome</label>
             <div class="col-md-10">
@@ -80,29 +81,21 @@
           <div class="form-group row">
               <label for="paternalGrandfather" class="col-md-1 col-form-label">Avô Paterno</label>
               <div class="col-md-5">
-                <textarea class="form-control" id="paternalGrandfather" rows="3">
-                  Não Informado
-                </textarea>
+                <textarea class="form-control" id="paternalGrandfather" rows="3">Não Informado</textarea>
               </div>
               <label for="paternalGrandmother" class="col-md-1 col-form-label">Avó Paterna</label>
               <div class="col-md-5">
-                <textarea class="form-control" id="paternalGrandmother" rows="3">
-                  Não Informado
-                </textarea>
+                <textarea class="form-control" id="paternalGrandmother" rows="3">Não Informado</textarea>
               </div>
           </div>
           <div class="form-group row">
               <label for="maternalGrandfather" class="col-md-1 col-form-label">Avô Materno</label>
               <div class="col-md-5">
-                <textarea class="form-control" id="maternalGrandfather" rows="3">
-                  Não Informado
-                </textarea>
+                <textarea class="form-control" id="maternalGrandfather" rows="3">Não Informado</textarea>
               </div>
               <label for="maternalGrandmother" class="col-md-1 col-form-label">Avó Materna</label>
               <div class="col-md-5">
-                <textarea class="form-control" id="maternalGrandmother" rows="3">
-                  Não Informado
-                </textarea>
+                <textarea class="form-control" id="maternalGrandmother" rows="3">Não Informado</textarea>
               </div>
           </div>
           <hr/>
@@ -116,7 +109,7 @@
           </div>
           <p id="accountAddress" class="text-center"></p>
           <br/>
-          <button class="btn btn-primary" type="submit">Criar Certidão</button>
+          <button class="btn btn-success" type="submit">Criar Certidão</button>
           <br/><br/>
         </form>
       </div>
