@@ -97,8 +97,6 @@ App = {
     const witness = $('#witness').val();
     const gender = $('input[name="gender"]:checked').val();
 
-    alert(gender)
-
     var notaryInstance;
     var newCertificateCode;
 

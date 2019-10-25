@@ -20,7 +20,7 @@ contract Notary {
         string maternalGrandmother;
         string witness;
     }
-    
+
     // Read/write Certificates
     mapping(uint => Certificate) public certificates;
     mapping(uint => uint) public codePosition;
@@ -38,7 +38,7 @@ contract Notary {
                                 string memory _paternalGrandmother,
                                 string memory _maternalGrandfather,
                                 string memory _maternalGrandmother,
-                                string memory _witness ) public {
+                                string memory _witness) public {
         certificateCount ++;
         Certificate memory certificate;
         certificate.code = _code;
