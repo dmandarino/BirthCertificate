@@ -87,6 +87,7 @@ App = {
   createCertificate: function() {
     const name = $('#name').val();
     const city = $('#city').val();
+    const uf = $('#UF').val();
     const gender = $('input[name="gender"]:checked').val();
 
     var notaryInstance;
@@ -107,6 +108,7 @@ App = {
         return notaryInstance.createPerson(newCertificateCode,
                                        name,
                                        city,
+                                       uf,
                                        gender,
                                        14,
                                        09,
