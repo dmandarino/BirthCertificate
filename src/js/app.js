@@ -32,7 +32,6 @@ App = {
   },
 
   render: function() {
-    var electionInstance;
     var loader = $("#loader");
     var content = $("#content");
   
@@ -43,7 +42,7 @@ App = {
     web3.eth.getCoinbase(function(err, account) {
       if (err === null) {
         App.account = account;
-        $("#accountAddress").html("Endereço do Cartório: " + account);
+        // $("#accountAddress").html("Endereço do Cartório: " + account);
       }
     });
   },
@@ -126,7 +125,8 @@ App = {
                                        { from: App.account, gas:3000000 });
     }).then(function() {
       console.log('saved')
-      $("#certificateCode").html("Matrícula: " + newCertificateCode);
+      alert('Salvo com sucesso! Matrícula:'+ newCertificateCode);
+      window.location.reload();
     }).catch(function(err) {
       console.error(err);
     });
