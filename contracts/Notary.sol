@@ -11,6 +11,7 @@ contract Notary {
         uint code;
         string name;
         string city;
+        string state;
         string gender;
         uint day;
         uint month;
@@ -43,6 +44,7 @@ contract Notary {
     function createPerson ( uint _code,
                             string memory _name,
                             string memory _city,
+                            string memory _state,
                             string memory _gender,
                             uint _day,
                             uint _month,
@@ -52,6 +54,7 @@ contract Notary {
         person.code = _code;
         person.name = _name;
         person.city = _city;
+        person.state = _state;
         person.gender = _gender;
         person.day = _day;
         person.month = _month;

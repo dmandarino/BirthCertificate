@@ -9,6 +9,7 @@ contract("Notary", function(accounts) {
       notaryInstance.createPerson(99,
                                   'Bruce Wayne',
                                   'Gotham City',
+                                  'State',
                                   'M',
                                   14,
                                   09,
@@ -32,6 +33,7 @@ contract("Notary", function(accounts) {
       return notaryInstance.createPerson(99,
                                         '',
                                         'Gotham City',
+                                        'State',
                                         'M',
                                         14,
                                         09,
@@ -48,6 +50,7 @@ contract("Notary", function(accounts) {
       return notaryInstance.createPerson(99,
                                         'Bruce Wayne',
                                         'Gotham City',
+                                        'State',
                                         'T',
                                         14,
                                         09,
@@ -58,12 +61,13 @@ contract("Notary", function(accounts) {
     });
   });
 
-  it("throws an exception for invalid date", function() {
-    Notary.deployed().then(function(instance) {
+  it("throws an exception for invalid day", function() {
+    return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
       return notaryInstance.createPerson(99,
                                         'Bruce Wayne',
                                         'Gotham City',
+                                        'State',
                                         'M',
                                         0,
                                         09,
@@ -72,12 +76,15 @@ contract("Notary", function(accounts) {
     }).then(assert.fail).catch(function(error) {
       assert(error.message.indexOf('wrong day') >= 0, 'wrong day');
     });
+  });
 
-    Notary.deployed().then(function(instance) {
+  it("throws an exception for invalid month", function() {
+    return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
       return notaryInstance.createPerson(99,
                                         'Bruce Wayne',
                                         'Gotham City',
+                                        'State',
                                         'M',
                                         03,
                                         14,
@@ -86,12 +93,15 @@ contract("Notary", function(accounts) {
     }).then(assert.fail).catch(function(error) {
       assert(error.message.indexOf('wrong month') >= 0, 'wrong month');
     });
+  });
 
-    Notary.deployed().then(function(instance) {
+  it("throws an exception for invalid year", function() {
+    return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
       return notaryInstance.createPerson(99,
                                         'Bruce Wayne',
                                         'Gotham City',
+                                        'State',
                                         'M',
                                         3,
                                         09,
@@ -130,6 +140,7 @@ contract("Notary", function(accounts) {
       notaryInstance.createPerson(12,
                                   'Bruce Wayne',
                                   'Gotham City',
+                                  'State',
                                   'M',
                                   14,
                                   09,
@@ -151,6 +162,7 @@ contract("Notary", function(accounts) {
       notaryInstance.createPerson(12,
                                   'Bruce Wayne',
                                   'Gotham City',
+                                  'State',
                                   'M',
                                   14,
                                   09,
@@ -161,8 +173,8 @@ contract("Notary", function(accounts) {
       instance.getPersonKey(10).then(function(codeKey) {
         return instance.people(codeKey);
       }).then(function(certificate) {
-        assert.equal(certificate[0], 10, "Search for a certificate");
-        assert.equal(certificate[1], 'Bruce Wayne', "Search for a certificate");
+        assert.notEqual(certificate[0], 10, "Search for a certificate");
+        assert.notEqual(certificate[1], 'Bruce Wayne', "Search for a certificate");
       });
     });
   });
@@ -170,33 +182,27 @@ contract("Notary", function(accounts) {
   it("throws an exception for duplicated certification number", function() {
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;
-      notaryInstance.createCertificate(99,
-                                          'Bruce Wayne',
-                                          'Gotham City',
-                                          'M',
-                                          'Thomas Wayne',
-                                          'Martha Wayne',
-                                          'Grandfather Wayne',
-                                          'Grandmother Wayne',
-                                          'Grandfather Mother',
-                                          'Grandmother Mother',
-                                          'Douglas Mandarino',
-                                          { from: accounts[1] });
-      return notaryInstance.certificates(1);
+      notaryInstance.createPerson(99,
+                                  'Bruce Wayne',
+                                  'Gotham City',
+                                  'State',
+                                  'M',
+                                  14,
+                                  09,
+                                  1991,
+                                  { from: accounts[1] });
+      return notaryInstance.people(99);
     }).then(function(certificate) {
-        assert.equal(certificate.code, 99, "Create a Crtificate");
-        notaryInstance.createCertificate(99,
-                                          'Peter Parker',
-                                          'New York',
-                                          'M',
-                                          'Mr Parker',
-                                          'Mrs Parker',
-                                          'Grandfather Parker',
-                                          'Grandmother Parker',
-                                          'Grandfather Parker',
-                                          'Grandmother Parker',
-                                          'Douglas Mandarino',
-                                          { from: accounts[1] });
+      assert.equal(certificate.code, 99, "Create a Crtificate");
+      notaryInstance.createPerson(99,
+                                  'Bruce Wayne',
+                                  'Gotham City',
+                                  'State',
+                                  'M',
+                                  14,
+                                  09,
+                                  1991,
+                                  { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       // assert(error.message.indexOf('revert') >= 0, 'code must be unique');
     });
