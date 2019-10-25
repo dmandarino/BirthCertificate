@@ -58,6 +58,50 @@ contract("Notary", function(accounts) {
     });
   });
 
+  it("throws an exception for invalid date", function() {
+    Notary.deployed().then(function(instance) {
+      notaryInstance = instance;
+      return notaryInstance.createPerson(99,
+                                        'Bruce Wayne',
+                                        'Gotham City',
+                                        'M',
+                                        0,
+                                        09,
+                                        1991,
+                                        { from: accounts[1] });
+    }).then(assert.fail).catch(function(error) {
+      assert(error.message.indexOf('wrong day') >= 0, 'wrong day');
+    });
+
+    Notary.deployed().then(function(instance) {
+      notaryInstance = instance;
+      return notaryInstance.createPerson(99,
+                                        'Bruce Wayne',
+                                        'Gotham City',
+                                        'M',
+                                        03,
+                                        14,
+                                        1991,
+                                        { from: accounts[1] });
+    }).then(assert.fail).catch(function(error) {
+      assert(error.message.indexOf('wrong month') >= 0, 'wrong month');
+    });
+
+    Notary.deployed().then(function(instance) {
+      notaryInstance = instance;
+      return notaryInstance.createPerson(99,
+                                        'Bruce Wayne',
+                                        'Gotham City',
+                                        'M',
+                                        3,
+                                        09,
+                                        0,
+                                        { from: accounts[1] });
+    }).then(assert.fail).catch(function(error) {
+      assert(error.message.indexOf('year must not be empty') >= 0, 'year must not be empty');
+    });
+  });
+
   it("create a Relatives", function() {
     return Notary.deployed().then(function(instance) {
       notaryInstance = instance;

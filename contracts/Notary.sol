@@ -97,6 +97,9 @@ contract Notary {
         require(people[person.code].code == 0, 'code must be unique');
         require(bytes(person.name).length > 0, 'name must not be empty');
         require(bytes(person.city).length > 0, 'city must not be empty');
+        require(person.day > 0 && person.day < 31, 'wrong day');
+        require(person.month > 0 && person.month < 13, 'wrong month');
+        require(person.year > 0, 'year must not be empty');
         bytes memory gender = bytes(person.gender);
         require(keccak256(gender) == keccak256('M') || keccak256(gender) == keccak256('F'), 'gender must not be M or F');
     }
