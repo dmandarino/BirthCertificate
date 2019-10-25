@@ -23,9 +23,9 @@ App = {
   initContract: function() {
     $.getJSON("Notary.json", function(notary) {
       // Instantiate a new truffle contract from the artifact
-      App.contracts.Notary = TruffleContract(notary);
+      App.contracts.Notary2 = TruffleContract(notary);
       // Connect provider to interact with contract
-      App.contracts.Notary.setProvider(App.web3Provider);
+      App.contracts.Notary2.setProvider(App.web3Provider);
 
       return App.render();
     });
@@ -42,7 +42,7 @@ App = {
     web3.eth.getCoinbase(function(err, account) {
       if (err === null) {
         App.account = account;
-        // $("#accountAddress").html("Endereço do Cartório: " + account);
+        $("#accountAddress").html("Endereço do Cartório: " + account);
       }
     });
   },
@@ -87,13 +87,6 @@ App = {
   createCertificate: function() {
     const name = $('#name').val();
     const city = $('#city').val();
-    const father = $('#father').val();
-    const mother = $('#mother').val();
-    const paternalGrandfather = $('#paternalGrandfather').val();
-    const paternalGrandmother = $('#paternalGrandmother').val();
-    const maternalGrandfather = $('#maternalGrandfather').val();
-    const maternalGrandmother = $('#maternalGrandmother').val();
-    const witness = $('#witness').val();
     const gender = $('input[name="gender"]:checked').val();
 
     var notaryInstance;
@@ -104,31 +97,58 @@ App = {
       return notaryInstance.certificateCount();
     }).then(function(count) {
       const codePosition = count.toString();
-      return notaryInstance.certificates(codePosition);
+      return notaryInstance.people(codePosition);
     }).then(function(certificate) {
       const lastCode = certificate[0].toString();
       return parseInt(lastCode) + 1;
     }).then(function(newCode) {
       console.log(newCode)
       newCertificateCode = newCode;
-      return notaryInstance.createCertificate(newCode,
+        return notaryInstance.createPerson(newCertificateCode,
                                        name,
                                        city,
                                        gender,
-                                       father,
-                                       mother,
-                                       paternalGrandfather,
-                                       paternalGrandmother,
-                                       maternalGrandfather,
-                                       maternalGrandmother,
-                                       witness,
+                                       14,
+                                       09,
+                                       1991,
                                        { from: App.account, gas:3000000 });
+    }).then(function() {
+      return App.createRelatives(newCertificateCode);
     }).then(function() {
       console.log('saved')
       alert('Salvo com sucesso! Matrícula:'+ newCertificateCode);
       window.location.reload();
     }).catch(function(err) {
-      console.error(err);
+      console.error(err);
+    });
+  },
+
+  createRelatives: function(newCertificateCode) {
+    const father = $('#father').val();
+    const mother = $('#mother').val();
+    const paternalGrandfather = $('#paternalGrandfather').val();
+    const paternalGrandmother = $('#paternalGrandmother').val();
+    const maternalGrandfather = $('#maternalGrandfather').val();
+    const maternalGrandmother = $('#maternalGrandmother').val();
+
+    var notaryInstance;
+
+    App.contracts.Notary.deployed().then(function(instance) {
+      notaryInstance = instance;
+      return notaryInstance.createRelatives(newCertificateCode,
+                                            father,
+                                            mother,
+                                            paternalGrandfather,
+                                            paternalGrandmother,
+                                            maternalGrandfather,
+                                            maternalGrandmother,
+                                           { from: App.account, gas:3000000 });
+    }).then(function() {
+      console.log('saved')
+      alert('Salvo com sucesso! Matrícula:'+ newCertificateCode);
+      window.location.reload();
+    }).catch(function(err) {
+      console.error(err);
     });
   },
 
@@ -138,22 +158,24 @@ App = {
     var notaryInstance;
     var codePosition;
     
-    return App.contracts.Notary.deployed().then(function(instance) {
+    App.contracts.Notary.deployed().then(function(instance) {
       notaryInstance = instance;
-      return notaryInstance.getCertificateKey(search);
+      return notaryInstance.getPersonKey(search);
     }).then(function(codeKey) {
       codePosition = codeKey.toString();
-      return notaryInstance.certificates(codePosition);
-    }).then(function(certificate) {
-      App.showValues(certificate[0], certificate[1], certificate[2], certificate[3], certificate[4], certificate[5], 
-                    certificate[6], certificate[7], certificate[8], certificate[9], certificate[10]);
+      return notaryInstance.people(codePosition);
+    }).then(function(person) {
+      return App.showPersonValues(person[0], person[1], person[2], person[3]);
+    }).then(function() {
+      return notaryInstance.relativeList(codePosition);
+    }).then(function(relatives) {
+      return App.showRelativesValues(relatives[1], relatives[2], relatives[3], relatives[4], relatives[5], relatives[6]);
     }).catch(function(err) {
       console.error(err);
     });
   },
 
-  showValues: function(code, name, city, gender, father, mother, paternalGrandfather, 
-                      paternalGrandmother, maternalGrandfather, maternalGrandmother, witness) {
+  showPersonValues: function(code, name, city, gender) {
     if (code == 0) {
       $("#certificateCode").html("Nenhuma Certidão encontrada para matrícula: " + code);
     } else {
@@ -165,13 +187,6 @@ App = {
       $("#certificateCode").html("Matrícula: " + code);
       $("#name").val(name);
       $("#city").val(city);
-      $("#father").val(father);
-      $("#mother").val(mother);
-      $("#paternalGrandfather").val(paternalGrandfather);
-      $("#paternalGrandmother").val(paternalGrandmother);
-      $("#maternalGrandfather").val(maternalGrandfather);
-      $("#maternalGrandmother").val(maternalGrandmother);
-      $("#witness").val(witness);
       var $radios = $('input:radio[name=gender]');
       if (gender === 'M') {
         $radios.filter('[value=M]').prop('checked', true);
@@ -179,6 +194,16 @@ App = {
         $radios.filter('[value=F]').prop('checked', true);
       }
     }
+  },
+
+  showRelativesValues: function(father, mother, paternalGrandfather, 
+                                paternalGrandmother, maternalGrandfather, maternalGrandmother) {
+    $("#father").val(father);
+    $("#mother").val(mother);
+    $("#paternalGrandfather").val(paternalGrandfather);
+    $("#paternalGrandmother").val(paternalGrandmother);
+    $("#maternalGrandfather").val(maternalGrandfather);
+    $("#maternalGrandmother").val(maternalGrandmother);
   }
 };
 
