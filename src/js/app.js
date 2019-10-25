@@ -86,9 +86,15 @@ App = {
 
   createCertificate: function() {
     const name = $('#name').val();
+    const date = $('#date').val().split('/');
+    const day = parseInt(date[0]);
+    const month = parseInt(date[1]);
+    const year = parseInt(date[2]);
     const city = $('#city').val();
-    const uf = $('#UF').val();
+    const uf = $('#uf').val();
+    const hour = $('#hour').val();
     const gender = $('input[name="gender"]:checked').val();
+
 
     var notaryInstance;
     var newCertificateCode;
@@ -103,16 +109,16 @@ App = {
       const lastCode = certificate[0].toString();
       return parseInt(lastCode) + 1;
     }).then(function(newCode) {
-      console.log(newCode)
       newCertificateCode = newCode;
         return notaryInstance.createPerson(newCertificateCode,
                                        name,
                                        city,
                                        uf,
                                        gender,
-                                       14,
-                                       09,
-                                       1991,
+                                       day,
+                                       month,
+                                       year,
+                                       hour,
                                        { from: App.account, gas:3000000 });
     }).then(function() {
       return App.createRelatives(newCertificateCode);
@@ -167,17 +173,17 @@ App = {
       codePosition = codeKey.toString();
       return notaryInstance.people(codePosition);
     }).then(function(person) {
-      return App.showPersonValues(person[0], person[1], person[2], person[3]);
+      return App.showPersonValues(person[0], person[1], person[2], person[3], person[4], person[5], person[6], person[7]);
     }).then(function() {
       return notaryInstance.relativeList(codePosition);
     }).then(function(relatives) {
-      return App.showRelativesValues(relatives[1], relatives[2], relatives[3], relatives[4], relatives[5], relatives[6]);
+      return App.showRelativesValues(relatives[1], relatives[2], relatives[3], relatives[4], relatives[5], relatives[6], relatives[7]);
     }).catch(function(err) {
       console.error(err);
     });
   },
 
-  showPersonValues: function(code, name, city, gender) {
+  showPersonValues: function(code, name, city, uf, gender, day, month, year) {
     if (code == 0) {
       $("#certificateCode").html("Nenhuma Certidão encontrada para matrícula: " + code);
     } else {
@@ -189,6 +195,8 @@ App = {
       $("#certificateCode").html("Matrícula: " + code);
       $("#name").val(name);
       $("#city").val(city);
+      $("#uf").val(uf);
+      $("#date").val(day+'/'+month+'/'+year+'');
       var $radios = $('input:radio[name=gender]');
       if (gender === 'M') {
         $radios.filter('[value=M]').prop('checked', true);

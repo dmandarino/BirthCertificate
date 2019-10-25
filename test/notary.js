@@ -14,6 +14,7 @@ contract("Notary", function(accounts) {
                                   14,
                                   09,
                                   1991,
+                                  '12:30',
                                   { from: accounts[1] });
       return notaryInstance.people(1);
     }).then(function(certificate) {
@@ -38,6 +39,7 @@ contract("Notary", function(accounts) {
                                         14,
                                         09,
                                         1991,
+                                        '12:30',
                                         { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       assert(error.message.indexOf('name must not be empty') >= 0, 'name must not be empty');
@@ -55,6 +57,7 @@ contract("Notary", function(accounts) {
                                         14,
                                         09,
                                         1991,
+                                        '12:30',
                                         { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       assert(error.message.indexOf('gender must not be M or F') >= 0, 'gender must not be M or F');
@@ -72,6 +75,7 @@ contract("Notary", function(accounts) {
                                         0,
                                         09,
                                         1991,
+                                        '12:30',
                                         { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       assert(error.message.indexOf('wrong day') >= 0, 'wrong day');
@@ -89,6 +93,7 @@ contract("Notary", function(accounts) {
                                         03,
                                         14,
                                         1991,
+                                        '12:30',
                                         { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       assert(error.message.indexOf('wrong month') >= 0, 'wrong month');
@@ -106,6 +111,7 @@ contract("Notary", function(accounts) {
                                         3,
                                         09,
                                         0,
+                                        '12:30',
                                         { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       assert(error.message.indexOf('year must not be empty') >= 0, 'year must not be empty');
@@ -145,6 +151,7 @@ contract("Notary", function(accounts) {
                                   14,
                                   09,
                                   1991,
+                                  '12:30',
                                   { from: accounts[1] });
       return notaryInstance;
     }).then(function(instance) {
@@ -167,6 +174,7 @@ contract("Notary", function(accounts) {
                                   14,
                                   09,
                                   1991,
+                                  '12:30',
                                   { from: accounts[1] });
       return notaryInstance;
     }).then(function(instance) {
@@ -190,6 +198,7 @@ contract("Notary", function(accounts) {
                                   14,
                                   09,
                                   1991,
+                                  '12:30',
                                   { from: accounts[1] });
       return notaryInstance.people(99);
     }).then(function(certificate) {
@@ -202,6 +211,7 @@ contract("Notary", function(accounts) {
                                   14,
                                   09,
                                   1991,
+                                  '12:30',
                                   { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       // assert(error.message.indexOf('revert') >= 0, 'code must be unique');

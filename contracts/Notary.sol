@@ -16,6 +16,7 @@ contract Notary {
         uint day;
         uint month;
         uint year;
+        string hour;
     }
 
     struct Relatives {
@@ -48,7 +49,8 @@ contract Notary {
                             string memory _gender,
                             uint _day,
                             uint _month,
-                            uint _year) public {
+                            uint _year,
+                            string memory _hour) public {
         certificateCount ++;
         Person memory person;
         person.code = _code;
@@ -59,6 +61,7 @@ contract Notary {
         person.day = _day;
         person.month = _month;
         person.year = _year;
+        person.hour = _hour;
         
         validatePerson(person);
 
@@ -105,6 +108,7 @@ contract Notary {
         require(person.year > 0, 'year must not be empty');
         bytes memory gender = bytes(person.gender);
         require(keccak256(gender) == keccak256('M') || keccak256(gender) == keccak256('F'), 'gender must not be M or F');
+        require(bytes(person.hour).length > 0, 'hour must not be empty');
     }
 
     function validateRelatives(Relatives memory relative) private {
